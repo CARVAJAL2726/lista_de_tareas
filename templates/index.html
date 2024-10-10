@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}inicio{% endblock %}
+
+{% block content %} 
+                <div class="container-sm text-center">
+                    <div class="card-header"  style="background-color: rgb(26, 105, 207);">
+                        <h1 class="display-3 color: white">UNIVERSIDAD LIBRE </h1>
+                    </div>
+                    <p class="lead"> Aquí puedes llevar un registro de todas tus tareas y tener una vista general de tus 
+                        responsabilidades.</p>
+
+                    <hr classs="my-4">
+
+                    <p>Tienes una cuenta?</p>
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <a href="{{url_for('login')}}" class="btn btn-primary mx-2">iniciar sesion</a>
+                        <a href="{{url_for('register')}}" class="btn btn-secondary mx-2">Registrarse</a>
+
+                    </div>
+                </div>
+                <br><br><br><br><br><br><br><br><br> {% include 'footer.html' %} 
+                      
+{% endblock %}
+<br><br><br>
+
+
+

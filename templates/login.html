@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header"  style="background-color: rgb(214, 23, 23);">
+                        <h1 class="text-center">{% block title %}Iniciar sesión{% endblock %}</h1>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="">
+                            <div class="form-group">
+                                <label for="user">Nombre de Usuario </label>
+                                <input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="user">Contraseña </label>
+                                <input type="text" class="form-control" id="password" placeholder="Ingrese su Contraseña" name="password" required>
+                            </div>
+                            <br>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Iniciar sesión">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br><br><br> {% include 'footer.html' %} 
+{% endblock %}
