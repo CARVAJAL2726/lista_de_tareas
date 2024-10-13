@@ -20,6 +20,7 @@ mysql.init_app(app)
 def index():
         return render_template('index.html')
 #-------AUTH--------------------
+#--------------register------------
 @app.route('/register')
 def register():
     sql= "SELECT * FROM login"
@@ -28,6 +29,7 @@ def register():
     cursor.execute(sql)
     login = cursor.fetchall()
     conexion.commit()
+    
     return render_template('register.html', login=login)
 
 
@@ -44,11 +46,32 @@ def guardar():
     conexion.commit()
     return render_template('login.html')
 
+
+
+#-----------------login----------------------
+
 @app.route('/login')
 def login():
     return render_template('login.html')
 
 
+
+
+@app.route('/templates/login.html' , methods=['POST'] )
+def iniciarsecion():
+    username= request.form['username']
+    password= request.form['password']
+    conexion = mysql.connection
+    cursor = conexion.cursor()
+    sql= "SELECT * FROM login WHERE users = %s AND passwords = %s"
+    datos = (username, password)
+    cursor.execute(sql,datos)
+    conexion.commit()
+    ingresar=cursor.fetchone()
+    if ingresar:
+        return render_template('jh.html')
+    else:
+         return ("paila")
 
 
 if __name__ == '__main__':
