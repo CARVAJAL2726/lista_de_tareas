@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas - {% block title %}{% endblock %}</title>
+    <style>
+        @keyframes mover {
+            0% {
+                transform: translate(0, 100vh);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+        .mover {
+            position: absolute;
+            animation: mover 5s forwards;
+            width: 100px; /* Ajusta el tamaño según sea necesario */
+            height: 100px; /* Ajusta el tamaño según sea necesario */
+            left: 5px; /* Ajusta esta distancia según sea necesario */
+            margin-left: 5px; /* Ajusta esta distancia según sea necesario */
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+    <img src="/static/imageU.jpg" alt="Imagen en Movimiento" class="mover">
+</body>
+</html>

@@ -1,14 +1,20 @@
+
 {% extends 'base.html' %}
+
+
 
 {% block title %}inicio{% endblock %}
 
-{% block content %} 
+{% block content %} <br> 
+{% include 'escudo.html' %}  
+
+
                 <div class="container-sm text-center">
-                    <div class="card-header"  style="background-color: rgb(26, 105, 207);">
-                        <h1 class="display-3 color: white">UNIVERSIDAD LIBRE </h1>
+                    <div class="card-header"  style="background-color: rgb(199, 0, 0);">
+                        <h1 class="display-3" style="color: #ffffff; font-style: italic;">UNIVERSIDAD LIBRE</h1>
+
                     </div>
-                    <p class="lead"> Aquí puedes llevar un registro de todas tus tareas y tener una vista general de tus 
-                        responsabilidades.</p>
+                    <p class="lead"> "¡Sigan adelante, su esfuerzo hoy define el éxito de mañana!" 🚀.</p>
 
                     <hr classs="my-4">
 
@@ -21,6 +27,7 @@
                     </div>
                 </div>
                 <br><br><br><br><br><br><br><br><br> {% include 'footer.html' %} 
+                
                       
 {% endblock %}
 <br><br><br>
