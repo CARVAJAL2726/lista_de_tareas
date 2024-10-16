@@ -1,35 +1,63 @@
 {% extends 'base.html' %}
-
-
-
 {% block content %}
-
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header"  style="background-color: rgb(214, 23, 23);">
-                        <h1 class="text-center">{% block title %}Iniciar sesión{% endblock %}</h1>
-                    </div>
-                    <div class="card-body">
-                        <form action="/templates/login.html" method="POST">
-                            <div class="form-group">
-                                <label for="user">Nombre de Usuario </label>
-                                <input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card shadow-lg">
+                <div class="card-header text-white text-center" style="background-color: #d41616;">
+                    <h1>{% block title %}Iniciar Sesión{% endblock %}</h1>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-family: 'Roboto', sans-serif; color: hsl(0, 86%, 44%);">
+                                {% for message in messages %}
+                                    <strong>{{ message }}</strong>
+                                {% endfor %}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                            <div class="form-group">
-                                <label for="user">Contraseña </label>
-                                <input type="text" class="form-control" id="password" placeholder="Ingrese su Contraseña" name="password" required>
+                        {% endif %}
+                    {% endwith %}
+                    <form action="{{ url_for('iniciarsecion') }}" method="POST">
+                        <div class="form-group">
+                            <label for="username" class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" placeholder="Ingrese su Contraseña" name="password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                                    <i class="bi bi-eye"></i>
+                                </button>
                             </div>
-                            <br>
-                            <div class="text-center">
-                                <input type="submit" class="btn btn-primary" onclick="iniciarsecion()">
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <br>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary w-100" value="Iniciar Sesión">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-<br><br><br> {% include 'footer.html' %} 
+</div>
+<br><br><br>
+{% include 'footer.html' %}
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.querySelector('.btn-outline-secondary i');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('bi-eye');
+            eyeIcon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('bi-eye-slash');
+            eyeIcon.classList.add('bi-eye');
+        }
+    }
+</script>
 {% endblock %}
