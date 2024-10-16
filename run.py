@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, request, redirect, url_for, render_template, flash,session
 from flask import *
 from flask_mysqldb import MySQL
 
@@ -50,23 +50,24 @@ def register():
 def guardar():
     username = request.form['username']
     password = request.form['password']
+    rol = request.form['rol']
     
     conexion = mysql.connection
     cursor = conexion.cursor()
     
     # Verificar si el usuario o contraseña ya existen
-    cursor.execute("SELECT * FROM login WHERE users=%s OR passwords=%s", (username, password))
+    cursor.execute("SELECT * FROM login WHERE users=%s OR passwords=%s ", (username, password))
     user = cursor.fetchone()
     
     if user:
         flash('El nombre de usuario o la contraseña ya están en uso. Por favor, elige otros.')
         return redirect(url_for('register'))
     else:
-        sql = "INSERT INTO login (users, passwords) VALUES (%s, %s)"
-        datos = (username, password)
+        sql = "INSERT INTO login (users, passwords,rol) VALUES (%s, %s,%s)"
+        datos = (username, password,rol)
         cursor.execute(sql, datos)
         conexion.commit()
-        flash('Usuario registrado exitosamente.')
+        flash(f'Usuario registrado exitosamente como {rol}')
     
     return render_template('register.html')
 
@@ -80,22 +81,52 @@ def login():
 
 
 
-@app.route('/templates/login.html' , methods=['POST'] )
+@app.route('/templates/login.html', methods=['POST'])
 def iniciarsecion():
-    username= request.form['username']
-    password= request.form['password']
+    username = request.form['username']
+    password = request.form['password']
     conexion = mysql.connection
     cursor = conexion.cursor()
-    sql= "SELECT * FROM login WHERE users = %s AND passwords = %s"
+    sql = "SELECT * FROM login WHERE users = %s AND passwords = %s"
     datos = (username, password)
-    cursor.execute(sql,datos)
-    conexion.commit()
-    ingresar=cursor.fetchone()
+    cursor.execute(sql, datos)
+    ingresar = cursor.fetchone()
+    
+    print(ingresar)  # Imprimir para depuración
+    
     if ingresar:
-        return render_template('pagina/pagina.html')
+        # Ajustar según los índices correctos de tu tabla login
+        session['username'] = ingresar[1]  # Ajusta según sea necesario
+        session['rol'] = ingresar[3]  # Ajusta según sea necesario
+        if ingresar[3] == 'profesor':
+            return redirect(url_for('pagina_profesor'))
+        else:
+            return redirect(url_for('pagina_estudiante'))
     else:
-        flash('Debes registrarte')
-    return render_template('login.html')
+        flash('Nombre de usuario o contraseña incorrectos.')
+        return
+
+
+
+#___________pagina del estudiante y profesor________________________________________
+
+
+@app.route('/pagina_profesor')
+def pagina_profesor():
+    # Solo accesible para profesores
+    if 'rol' in session and session['rol'] == 'profesor':
+        return render_template('pagina/pagina_profesor.html')
+    else:
+        return redirect(url_for('login'))
+    
+
+@app.route('/pagina_estudiante')
+def pagina_estudiante():
+    # Solo accesible para estudiantes
+    if 'rol' in session and session['rol'] == 'estudiante':
+        return render_template('pagina/pagina_estudiante.html')
+    else:
+        return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
