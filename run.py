@@ -92,13 +92,11 @@ def iniciarsecion():
     cursor.execute(sql, datos)
     ingresar = cursor.fetchone()
     
-    print(ingresar)  # Imprimir para depuración
-    
     if ingresar:
         # Ajustar según los índices correctos de tu tabla login
-        session['username'] = ingresar[1]  # Ajusta según sea necesario
-        session['rol'] = ingresar[3]  # Ajusta según sea necesario
-        if ingresar[3] == 'profesor':
+        session['username'] = ingresar['users']  # Ajusta según sea necesario
+        session['rol'] = ingresar['rol']  # Ajusta según sea necesario
+        if ingresar['rol'] == 'profesor':
             return redirect(url_for('pagina_profesor'))
         else:
             return redirect(url_for('pagina_estudiante'))
