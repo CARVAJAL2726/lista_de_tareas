@@ -5,6 +5,7 @@ from flask_mysqldb import MySQL
 
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'
 
 mysql = MySQL()
 app.config['MYSQL_HOST'] = 'localhost'
@@ -21,31 +22,53 @@ def index():
         return render_template('index.html')
 #-------AUTH--------------------
 #--------------register------------
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    sql= "SELECT * FROM login"
-    conexion = mysql.connection
-    cursor = conexion.cursor()
-    cursor.execute(sql)
-    login = cursor.fetchall()
-    conexion.commit()
-    
-    return render_template('register.html', login=login)
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        conexion = mysql.connection
+        cursor = conexion.cursor()
+        
+        # Verificar si el usuario o contraseña ya existen
+        cursor.execute("SELECT * FROM login WHERE users=%s OR passwords=%s", (username, password))
+        user = cursor.fetchone()
+        
+        if user:
+            flash('El nombre de usuario o la contraseña ya están en uso. Por favor, elige otros.')
+            return redirect(url_for('register'))
+        else:
+            cursor.execute("INSERT INTO login (users, passwords) VALUES (%s, %s)", (username, password))
+            conexion.commit()
+            flash('Usuario registrado exitosamente.')
+            return redirect(url_for('login'))
 
+    return render_template('register.html')
 
-@app.route('/templates/register.html' , methods=['POST'] )
+@app.route('/templates/register.html', methods=['POST'])
 def guardar():
-    username= request.form['username']
-    password= request.form['password']
-
-    sql= "INSERT INTO login (users, passwords) VALUES (%s,%s)"
-    datos = (username, password)
+    username = request.form['username']
+    password = request.form['password']
+    
     conexion = mysql.connection
     cursor = conexion.cursor()
-    cursor.execute(sql,datos)
-    conexion.commit()
-    return render_template('login.html')
-
+    
+    # Verificar si el usuario o contraseña ya existen
+    cursor.execute("SELECT * FROM login WHERE users=%s OR passwords=%s", (username, password))
+    user = cursor.fetchone()
+    
+    if user:
+        flash('El nombre de usuario o la contraseña ya están en uso. Por favor, elige otros.')
+        return redirect(url_for('register'))
+    else:
+        sql = "INSERT INTO login (users, passwords) VALUES (%s, %s)"
+        datos = (username, password)
+        cursor.execute(sql, datos)
+        conexion.commit()
+        flash('Usuario registrado exitosamente.')
+    
+    return render_template('register.html')
 
 
 #-----------------login----------------------
@@ -69,9 +92,10 @@ def iniciarsecion():
     conexion.commit()
     ingresar=cursor.fetchone()
     if ingresar:
-        return render_template('jh.html')
+        return render_template('pagina/pagina.html')
     else:
-         return ("paila")
+        flash('Debes registrarte')
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
